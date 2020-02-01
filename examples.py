@@ -5,6 +5,7 @@ import pandas as pd
 import numpy as np
 
 import stad
+import stad.optimized
 from stad.util import normalise_number_between_0_and_255, hex_to_hsv, calculate_highD_dist_matrix
 
 # To add a dataset, add a branch to load_testdata and add it to the dataset
@@ -40,7 +41,8 @@ def load_testdata(dataset):
 
 
 IMPLEMENTATIONS = {
-    'base': stad
+    'base': stad,
+    'optimized': stad.optimized
 }
 
 
