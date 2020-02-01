@@ -36,7 +36,7 @@ def main():
     values, lens, features = load_testdata('circles')
     highD_dist_matrix = stad.calculate_highD_dist_matrix(values)
     g = stad.run_stad(highD_dist_matrix, lens=lens, features=features)
-    stad.draw_stad(g)
+    stad.visualize.draw_stad(g)
 
 
 if __name__ == '__main__':
