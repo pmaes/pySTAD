@@ -43,8 +43,15 @@ def load_testdata(dataset):
 @click.command()
 @click.argument('dataset', type=click.Choice(['circles', 'horse', 'simulated'], case_sensitive=False))
 @click.option('--debug/--no-debug', default=False)
-def main(dataset, debug):
+@click.option('--lens/--no-lens', 'use_lens', default=True)
+def main(dataset, debug, use_lens):
     values, lens, features = load_testdata(dataset)
+
+    # Ignore the loaded lens if asked. Could be optimized to only load lens if
+    # asked instead of ignoring it later.
+    if not use_lens:
+        lens = []
+
     highD_dist_matrix = calculate_highD_dist_matrix(values)
 
     t_start = time.time()
