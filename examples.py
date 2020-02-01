@@ -6,6 +6,9 @@ import stad
 import stad.visualize
 from stad.util import normalise_number_between_0_and_255, hex_to_hsv, calculate_highD_dist_matrix
 
+# To add a dataset, add a branch to load_testdata and add it to the dataset
+# argument choices on main().
+
 def load_testdata(dataset):
     if dataset == 'horse':
         data = pd.read_csv('data/horse.csv', header=0)
