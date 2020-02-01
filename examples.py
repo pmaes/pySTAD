@@ -40,11 +40,17 @@ def load_testdata(dataset):
         raise ValueError('Unknown dataset: {}'.format(dataset))
 
 
+IMPLEMENTATIONS = {
+    'base': stad
+}
+
+
 @click.command()
 @click.argument('dataset', type=click.Choice(['circles', 'horse', 'simulated'], case_sensitive=False))
+@click.option('-i', '--implementation', type=click.Choice(IMPLEMENTATIONS.keys(), case_sensitive=False), default='base')
 @click.option('--debug/--no-debug', default=False)
 @click.option('--lens/--no-lens', 'use_lens', default=True)
-def main(dataset, debug, use_lens):
+def main(dataset, implementation, debug, use_lens):
     values, lens, features = load_testdata(dataset)
 
     # Ignore the loaded lens if asked. Could be optimized to only load lens if
@@ -54,8 +60,11 @@ def main(dataset, debug, use_lens):
 
     highD_dist_matrix = calculate_highD_dist_matrix(values)
 
+    impl_module = IMPLEMENTATIONS[implementation]
+    if debug: print(f"Using '{implementation}' implementation in {impl_module}")
+
     t_start = time.time()
-    g = stad.run_stad(highD_dist_matrix, lens=lens, features=features, debug=debug)
+    g = impl_module.run_stad(highD_dist_matrix, lens=lens, features=features, debug=debug)
     t_done = time.time()
     t_delta = t_done - t_start
     print(f"STAD calculation took {t_delta:.2f}s for {highD_dist_matrix.shape[0]} datapoints")
