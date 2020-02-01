@@ -49,8 +49,9 @@ IMPLEMENTATIONS = {
 @click.argument('dataset', type=click.Choice(['circles', 'horse', 'simulated'], case_sensitive=False))
 @click.option('-i', '--implementation', type=click.Choice(IMPLEMENTATIONS.keys(), case_sensitive=False), default='base')
 @click.option('--debug/--no-debug', default=False)
+@click.option('--viz/--no-viz', default=True)
 @click.option('--lens/--no-lens', 'use_lens', default=True)
-def main(dataset, implementation, debug, use_lens):
+def main(dataset, implementation, debug, viz, use_lens):
     values, lens, features = load_testdata(dataset)
 
     # Ignore the loaded lens if asked. Could be optimized to only load lens if
@@ -69,7 +70,8 @@ def main(dataset, implementation, debug, use_lens):
     t_delta = t_done - t_start
     print(f"STAD calculation took {t_delta:.2f}s for {highD_dist_matrix.shape[0]} datapoints")
 
-    stad.visualize.draw_stad(g)
+    if viz:
+        stad.visualize.draw_stad(g)
 
 
 if __name__ == '__main__':
