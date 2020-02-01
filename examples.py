@@ -40,8 +40,6 @@ def load_testdata(dataset):
         raise ValueError('Unknown dataset: {}'.format(dataset))
 
 
-import click
-
 @click.command()
 @click.argument('dataset', type=click.Choice(['circles', 'horse', 'simulated'], case_sensitive=False))
 @click.option('--debug/--no-debug', default=False)
