@@ -31,7 +31,7 @@ def load_testdata(dataset):
         }
         return (values, lens, features)
     else:
-        print("Dataset not known")
+        raise ValueError('Unknown dataset: {}'.format(dataset))
 
 
 def main():
