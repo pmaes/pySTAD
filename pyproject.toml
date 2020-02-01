@@ -3,6 +3,7 @@ name = "pystad"
 version = "2.0.1"
 description = "Dimensionality reduction through Simplified Topological Abstraction of Data"
 authors = ["Jan Aerts <jan.aerts@uhasselt.be>"]
+readme= "README.md"
 license = "MIT"
 
 [tool.poetry.dependencies]
