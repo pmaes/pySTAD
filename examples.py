@@ -1,3 +1,5 @@
+import time
+
 import click
 import pandas as pd
 import numpy as np
@@ -45,7 +47,13 @@ import click
 def main(dataset):
     values, lens, features = load_testdata(dataset)
     highD_dist_matrix = calculate_highD_dist_matrix(values)
+
+    t_start = time.time()
     g = stad.run_stad(highD_dist_matrix, lens=lens, features=features)
+    t_done = time.time()
+    t_delta = t_done - t_start
+    print(f"STAD calculation took {t_delta:.2f}s for {highD_dist_matrix.shape[0]} datapoints")
+
     stad.visualize.draw_stad(g)
 
 
