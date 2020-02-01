@@ -38,7 +38,7 @@ def load_testdata(dataset):
 import click
 
 @click.command()
-@click.option('--dataset', type=click.Choice(['circles', 'horse', 'simulated'], case_sensitive=False), default='circles')
+@click.argument('dataset', type=click.Choice(['circles', 'horse', 'simulated'], case_sensitive=False))
 def main(dataset):
     values, lens, features = load_testdata(dataset)
     highD_dist_matrix = calculate_highD_dist_matrix(values)
