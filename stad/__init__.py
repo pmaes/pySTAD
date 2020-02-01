@@ -502,18 +502,3 @@ def run_stad(highD_dist_matrix, lens=[], features={}, debug=False):
             dist_matrix,
             debug=debug)
     return g
-
-def main():
-    data = pd.read_csv('data/five_circles.csv', header=0)
-    values = data[['x','y']].values.tolist()
-    lens = data['hue'].map(lambda x:hex_to_hsv(x)[0]).values
-    xs = data['x'].values.tolist()
-    ys = data['y'].values.tolist()
-    hues = data['hue'].values.tolist()
-    highD_dist_matrix = calculate_highD_dist_matrix(values)
-    g = run_stad(highD_dist_matrix, lens=lens, features={'x':xs, 'y':ys, 'hue': hues})
-    # g = run_stad(highD_dist_matrix, features={'x':xs, 'y':ys, 'hue':hues})
-    draw_stad(g)
-
-if __name__ == '__main__':
-    main()
