@@ -7,6 +7,14 @@ license = "MIT"
 
 [tool.poetry.dependencies]
 python = "^3.7"
+numpy = "^1.18"
+scipy = "^1.4"
+scikit-learn = "^0.22.1"
+panel = "^0.8.0"
+vega = "=2.6.0"
+pandas = "^1.0"
+python-igraph = "^0.7.1"
+ipython = "^7.12"
 
 [tool.poetry.dev-dependencies]
 
