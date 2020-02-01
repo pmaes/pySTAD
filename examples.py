@@ -5,7 +5,6 @@ import pandas as pd
 import numpy as np
 
 import stad
-import stad.visualize
 from stad.util import normalise_number_between_0_and_255, hex_to_hsv, calculate_highD_dist_matrix
 
 # To add a dataset, add a branch to load_testdata and add it to the dataset
@@ -71,6 +70,9 @@ def main(dataset, implementation, debug, viz, use_lens):
     print(f"STAD calculation took {t_delta:.2f}s for {highD_dist_matrix.shape[0]} datapoints")
 
     if viz:
+        # Only import the visualize module (and vega dependency) if necessary,
+        # as it can take a couple seconds.
+        import stad.visualize
         stad.visualize.draw_stad(g)
 
 
