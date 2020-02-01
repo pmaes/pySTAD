@@ -1,3 +1,4 @@
+import click
 import pandas as pd
 import numpy as np
 
@@ -34,8 +35,12 @@ def load_testdata(dataset):
         raise ValueError('Unknown dataset: {}'.format(dataset))
 
 
-def main():
-    values, lens, features = load_testdata('circles')
+import click
+
+@click.command()
+@click.option('--dataset', type=click.Choice(['circles', 'horse', 'simulated'], case_sensitive=False), default='circles')
+def main(dataset):
+    values, lens, features = load_testdata(dataset)
     highD_dist_matrix = calculate_highD_dist_matrix(values)
     g = stad.run_stad(highD_dist_matrix, lens=lens, features=features)
     stad.visualize.draw_stad(g)
