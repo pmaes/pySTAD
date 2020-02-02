@@ -8,6 +8,10 @@ import stad
 import stad.optimized
 from stad.util import normalise_number_between_0_and_255, hex_to_hsv, calculate_highD_dist_matrix
 
+# This script encapsulates the loading of test datasets, switching between STAD
+# implementations, and visualising the resulting graph.
+# It offers a small command line interface. Run `python compare.py --help` for more information.
+
 # To add a dataset, add a branch to load_testdata and add it to the dataset
 # argument choices on main().
 
@@ -39,6 +43,10 @@ def load_testdata(dataset):
     else:
         raise ValueError('Unknown dataset: {}'.format(dataset))
 
+# To implement implementation switching, we can use python's first-order
+# modules. Since these can be placed in a dict like any other object, we simply
+# map from string to implementation. These both implement the same run_stad API
+# function.
 
 IMPLEMENTATIONS = {
     'base': stad,
@@ -48,6 +56,7 @@ IMPLEMENTATIONS = {
 
 @click.command()
 @click.argument('implementation', type=click.Choice(IMPLEMENTATIONS.keys(), case_sensitive=False), default='base')
+# This is where new datasets should be added as an option.
 @click.argument('dataset', type=click.Choice(['circles', 'horse', 'simulated'], case_sensitive=False))
 @click.option('--debug/--no-debug', default=True)
 @click.option('--viz/--no-viz', default=True)
@@ -62,6 +71,8 @@ def main(dataset, implementation, debug, viz, use_lens):
 
     highD_dist_matrix = calculate_highD_dist_matrix(values)
 
+    # This is where we pick which implementation to use.
+    # impl_module will point to the right module, which we can then call run_stad on.
     impl_module = IMPLEMENTATIONS[implementation]
     if debug: print(f"Using '{implementation}' implementation in {impl_module}")
 
