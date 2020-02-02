@@ -100,9 +100,11 @@ def with_edges(adj_m, edges):
 
 
 def seidel(adj):
-    """Implements the Seidel algorithm for APSP on unweighted, undirected graphs.
+    """
+    Implements the Seidel algorithm for APSP on unweighted, undirected graphs.
     For a given adjacency matrix, returns a like-sized matrix holding the
-    distances of the shortst paths between nodes."""
+    distances of the shortest paths between nodes.
+    """
     n = adj.shape[0]
 
     # Prepare our base case to compare against, an n x n matrix that is 0 on the
