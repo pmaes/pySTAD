@@ -1,7 +1,25 @@
 # pySTAD - Python implementation of Simplified Topological Abstraction of Data
 
-## Installation
-`pip install stad`
+## Hacking
+- Install [Poetry](https://github.com/python-poetry/poetry), the dependency manager.
+- Run `poetry install` in the root. This will create a virtual environment containing all necessary dependencies.
+- Use `poetry shell` to enter the virtual environment.
+- Run `python compare.py optimized circles --debug` to check everything is working.
+
+### compare.py
+
+This script implements a CLI to easily test different datasets and different STAD implementations.
+
+Run `python compare.py --help` to see the options.
+
+#### Run STAD on five circles using the base implementation
+`python compare.py base circles --debug`
+
+#### Run STAD on five circles using the optimized implementation
+`python compare.py optimized circles --debug`
+
+#### Run STAD on horse using the optimized implementation without visualizing (handy for quick checks)
+`python compare.py optimized horse --debug --no-viz`
 
 ## Usage
 The input to `stad` is a _normalised distance matrix_ (i.e. with values between 0 and 1). Optionally, you can also provide an array of values for each datapoint that can be used in the lens.
