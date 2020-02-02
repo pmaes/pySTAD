@@ -61,7 +61,8 @@ IMPLEMENTATIONS = {
 @click.option('--debug/--no-debug', default=True)
 @click.option('--viz/--no-viz', default=True)
 @click.option('--lens/--no-lens', 'use_lens', default=False)
-def main(dataset, implementation, debug, viz, use_lens):
+@click.option('--algo', type=click.Choice(['lipo', 'diffcurve'], case_sensitive=False), default='diffcurve')
+def main(dataset, implementation, debug, viz, use_lens, algo):
     values, lens, features = load_testdata(dataset)
 
     # Ignore the loaded lens if asked. Could be optimized to only load lens if
@@ -76,8 +77,12 @@ def main(dataset, implementation, debug, viz, use_lens):
     impl_module = IMPLEMENTATIONS[implementation]
     if debug: print(f"Using '{implementation}' implementation in {impl_module}")
 
+    opts = {
+        'optimizer': algo
+    }
+
     t_start = time.time()
-    g = impl_module.run_stad(highD_dist_matrix, lens=lens, features=features, debug=debug)
+    g = impl_module.run_stad(highD_dist_matrix, lens=lens, features=features, debug=debug, opts=opts),
     t_done = time.time()
     t_delta = t_done - t_start
     print(f"STAD calculation took {t_delta:.2f}s for {highD_dist_matrix.shape[0]} datapoints")

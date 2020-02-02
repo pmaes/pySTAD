@@ -248,11 +248,11 @@ def optimize_diff_curve(objective, debug=False):
 
 OPTIMIZERS = {
     'lipo': optimize_lipo,
-    'diff_curve': optimize_diff_curve
+    'diffcurve': optimize_diff_curve
 }
 
 
-def stad(distances, optimizer='diff_curve', unit=False, debug=False):
+def stad(distances, unit=False, debug=False, opts={}):
     if debug: print("Calculating MST")
     mst = unit_mst(distances)
     if debug: print("Removing MST links and sorting")
@@ -260,9 +260,10 @@ def stad(distances, optimizer='diff_curve', unit=False, debug=False):
     edges = ordered_edges(distances, without_mst)
     objective = STADObjective(distances, mst, edges)
 
+    optimizer = opts.get('optimizer', 'diffcurve')
     if debug: print(f"Optimizing using {optimizer}")
-    optimizer = OPTIMIZERS[optimizer]
-    opt = optimizer(objective, debug=debug)
+    optimizer_f = OPTIMIZERS[optimizer]
+    opt = optimizer_f(objective, debug=debug)
 
     stad_adj = with_edges(mst, edges[:opt['x']])
     if not unit:
@@ -275,10 +276,10 @@ def stad(distances, optimizer='diff_curve', unit=False, debug=False):
         'edges': edges,
     }
 
-def run_stad(highD_dist_matrix, lens=[], features={}, debug=False):
+def run_stad(highD_dist_matrix, lens=[], features={}, debug=False, opts={}):
     import igraph
 
-    res = stad(highD_dist_matrix, debug=debug)
+    res = stad(highD_dist_matrix, debug=debug, opts=opts)
     if debug: print(res['opt'])
     g = igraph.Graph.Weighted_Adjacency(res['adj'].tolist())
 

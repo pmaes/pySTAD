@@ -187,7 +187,7 @@ def run_basinhopping(cf, mst, links_to_add, highD_dist_matrix, debug = False):
 ########
 #### Bringing everything together
 ########
-def run_stad(highD_dist_matrix, lens=[], features={}, debug=False):
+def run_stad(highD_dist_matrix, lens=[], features={}, debug=False, opts={}):
     '''
     Options:
     * `lens` needs to be an array with a single numerical value for each datapoint,
