@@ -201,7 +201,7 @@ class STADObjective:
         return np.corrcoef(dist, self.distance_vector)[0][1]
 
 
-def find_bounds(f, n, iterations, frac):
+def restrict_bounds(f, n, iterations, frac):
     best = 0
     xs, ys = [], []
     
@@ -224,8 +224,11 @@ def find_bounds(f, n, iterations, frac):
     return (a, b)
 
 
-def optimize_lipo(objective):
-    res = adaptive_lipo(objective, [(0, objective.max_n)], 15, 0.1)
+def optimize_lipo(objective, debug=False):
+    if debug: print("Restricting bounds")
+    a, b = restrict_bounds(objective, objective.max_n, 10, 0.90)
+    if debug: print("LIPO")
+    res = adaptive_lipo(objective, [(a, b)], 15, 0.1)
     opt_index = np.argmax(res['y'])
     opt_obj = res['y'][opt_index]
     opt = int(res['x'][opt_index])
