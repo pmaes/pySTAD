@@ -208,6 +208,14 @@ class STADObjective:
         return np.corrcoef(dist, self.distance_vector)[0][1]
 
 
+# Because we assume our objective function will never increase to a new maximum
+# after a certain point, we can estimate a quick bound before running more
+# expensive optimization.
+
+# restrict_bounds evaluates the objective in steps determined by the amount of
+# iterations we maximally wish to spend, and stops and returns once the next
+# value is a certain fraction lower than the maximum found.
+# It returns the region that is within `frac` of the maximum.
 def restrict_bounds(f, n, iterations, frac):
     best = 0
     xs, ys = [], []
@@ -231,6 +239,12 @@ def restrict_bounds(f, n, iterations, frac):
     return (a, b)
 
 
+# We need a common API for our optimizers. These optimize_ functions wrap actual
+# optimizing algorithms so that they only take the objective function and a
+# debug flag. An obvious improvement would be to allow passing on of parameters,
+# which are currently hardcoded.
+
+
 def optimize_lipo(objective, debug=False):
     if debug: print("Restricting bounds")
     a, b = restrict_bounds(objective, objective.max_n, 10, 0.90)
@@ -246,6 +260,7 @@ def optimize_lipo(objective, debug=False):
 def optimize_diff_curve(objective, debug=False):
     return diff_curve.optimize_diff_curve(objective, objective.max_n, debug=debug)
 
+# To allow for dynamic choice of optimizer, we map their names to the actual functions.
 
 OPTIMIZERS = {
     'lipo': optimize_lipo,
@@ -276,6 +291,9 @@ def stad(distances, unit=False, debug=False, opts={}):
         'obj': objective,
         'edges': edges,
     }
+
+
+# This wrapper exists to give a similar API to the base implementation.
 
 def run_stad(highD_dist_matrix, lens=[], features={}, debug=False, opts={}):
     import igraph
