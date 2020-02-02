@@ -245,8 +245,7 @@ def stad(distances, unit=False, debug=False):
     objective = STADObjective(distances, mst, edges)
 
     if debug: print("Optimizing")
-    #a, b = find_bounds(objective, edges.shape[0], 10, 0.90)
-    opt = optimize_lipo(objective)
+    opt = optimize_lipo(objective, debug=debug)
 
     stad_adj = with_edges(mst, edges[:opt['x']])
     if not unit:
