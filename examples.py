@@ -51,7 +51,7 @@ IMPLEMENTATIONS = {
 @click.argument('dataset', type=click.Choice(['circles', 'horse', 'simulated'], case_sensitive=False))
 @click.option('--debug/--no-debug', default=True)
 @click.option('--viz/--no-viz', default=True)
-@click.option('--lens/--no-lens', 'use_lens', default=True)
+@click.option('--lens/--no-lens', 'use_lens', default=False)
 def main(dataset, implementation, debug, viz, use_lens):
     values, lens, features = load_testdata(dataset)
 
