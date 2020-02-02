@@ -1,5 +1,22 @@
 import numpy as np
 
+# This module implements a biased local maximizer tuned for the STAD objective
+# function. It uses the difference curve from the kneedle algorithm [0] to
+# incrementally restrict the evaluated region. Intuitively, it deals with the
+# raggedness of the function by initially evaluating it very coarsely (5 or so
+# points), at a scale at which we can safely assume the function behaves
+# unimodally. It then "zooms in" on the region around the elbow point, and
+# repeats the process. This is a local maximizer because this process breaks
+# down once we are at the scale of the raggedness, and we are not able to escape
+# local maxima. On top of that, the algorithm is on purpose geared towards
+# ignoring any maxima not around the elbow point, i.e. it favours less edges
+# over more.
+
+# [0] Satopää, V., Albrecht, J., Irwin, D., & Raghavan, B. (2011). Finding a
+# “kneedle” in a haystack: Detecting knee points in system behavior. Proceedings
+# - International Conference on Distributed Computing Systems, 166–171.
+#   https://doi.org/10.1109/ICDCSW.2011.20
+
 def normalize(a):
         return (a - np.min(a)) / (np.max(a) - np.min(a))
 
