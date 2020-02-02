@@ -133,7 +133,7 @@ def seidel(adj):
     #   2*t_ij     if x_ij >= t_ij * degree(j)
     #   2*t_ij - 1 if x_ij <  t_ij * degree(j)
     degrees = np.repeat(np.sum(adj, axis=1)[None, :], adj.shape[0], axis=0)
-    d = np.where(x >= np.multiply(t, degrees(adj)), 2 * t, 2 * t - 1)
+    d = np.where(x >= np.multiply(t, degrees), 2 * t, 2 * t - 1)
     return d.astype('float32')
 
 
