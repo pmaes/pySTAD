@@ -47,8 +47,8 @@ IMPLEMENTATIONS = {
 
 
 @click.command()
+@click.argument('implementation', type=click.Choice(IMPLEMENTATIONS.keys(), case_sensitive=False), default='base')
 @click.argument('dataset', type=click.Choice(['circles', 'horse', 'simulated'], case_sensitive=False))
-@click.option('-i', '--implementation', type=click.Choice(IMPLEMENTATIONS.keys(), case_sensitive=False), default='base')
 @click.option('--debug/--no-debug', default=False)
 @click.option('--viz/--no-viz', default=True)
 @click.option('--lens/--no-lens', 'use_lens', default=True)
