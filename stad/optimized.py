@@ -3,7 +3,7 @@ from scipy.sparse.csgraph import dijkstra, minimum_spanning_tree
 from scipy.linalg.blas import dgemm
 
 from stad import create_lensed_distmatrix_1step, assign_bins
-from stad.lipo import adaptive_lipo
+import stad.lipo as lipo
 
 # This module aims to implement an optimized version of the base STAD algorithm.
 # There are three core ideas to achieve this:
@@ -228,7 +228,7 @@ def optimize_lipo(objective, debug=False):
     if debug: print("Restricting bounds")
     a, b = restrict_bounds(objective, objective.max_n, 10, 0.90)
     if debug: print("LIPO")
-    res = adaptive_lipo(objective, [(a, b)], 15, 0.1)
+    res = lipo.adaptive_lipo(objective, [(a, b)], 15, 0.1)
     opt_index = np.argmax(res['y'])
     opt_obj = res['y'][opt_index]
     opt = int(res['x'][opt_index])
@@ -236,7 +236,12 @@ def optimize_lipo(objective, debug=False):
     return {'x': opt, 'y': opt_obj}
 
 
-def stad(distances, unit=False, debug=False):
+OPTIMIZERS = {
+    'lipo': optimize_lipo,
+}
+
+
+def stad(distances, optimizer='lipo', unit=False, debug=False):
     if debug: print("Calculating MST")
     mst = unit_mst(distances)
     if debug: print("Removing MST links and sorting")
@@ -245,7 +250,8 @@ def stad(distances, unit=False, debug=False):
     objective = STADObjective(distances, mst, edges)
 
     if debug: print("Optimizing")
-    opt = optimize_lipo(objective, debug=debug)
+    optimizer = OPTIMIZERS[optimizer]
+    opt = optimizer(objective, debug=debug)
 
     stad_adj = with_edges(mst, edges[:opt['x']])
     if not unit:
