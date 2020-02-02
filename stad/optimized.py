@@ -4,6 +4,7 @@ from scipy.linalg.blas import dgemm
 
 from stad import create_lensed_distmatrix_1step, assign_bins
 import stad.lipo as lipo
+import stad.diff_curve as diff_curve
 
 # This module aims to implement an optimized version of the base STAD algorithm.
 # There are three core ideas to achieve this:
@@ -18,8 +19,13 @@ import stad.lipo as lipo
 
 # 3. Use an optimizing algorithm that requires less function evaluations.
 #    Simulated annealing and basin hopping assume fast objective functions and
-#    evaluate these liberally. LIPO is a global optimization algorithm that is
-#    efficient in function calls and requires little parameters.
+#    evaluate these liberally. 
+#
+#    LIPO is a global optimization algorithm that is efficient in function calls
+#    and requires little parameters.
+#
+#    Diff_curve is designed for this specific objective function (broadly
+#    concave, increasing) and has a bias towards a lower amount of edges.
 
 
 # Linear algebra libraries like BLAS tend to be optimized for float32.
@@ -236,12 +242,17 @@ def optimize_lipo(objective, debug=False):
     return {'x': opt, 'y': opt_obj}
 
 
+def optimize_diff_curve(objective, debug=False):
+    return diff_curve.optimize_diff_curve(objective, objective.max_n, debug=debug)
+
+
 OPTIMIZERS = {
     'lipo': optimize_lipo,
+    'diff_curve': optimize_diff_curve
 }
 
 
-def stad(distances, optimizer='lipo', unit=False, debug=False):
+def stad(distances, optimizer='diff_curve', unit=False, debug=False):
     if debug: print("Calculating MST")
     mst = unit_mst(distances)
     if debug: print("Removing MST links and sorting")
@@ -249,7 +260,7 @@ def stad(distances, optimizer='lipo', unit=False, debug=False):
     edges = ordered_edges(distances, without_mst)
     objective = STADObjective(distances, mst, edges)
 
-    if debug: print("Optimizing")
+    if debug: print(f"Optimizing using {optimizer}")
     optimizer = OPTIMIZERS[optimizer]
     opt = optimizer(objective, debug=debug)
 
