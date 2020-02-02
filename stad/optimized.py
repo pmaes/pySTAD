@@ -183,6 +183,10 @@ class STADObjective:
         self.triu_indices = np.triu_indices(distances.shape[0], k=1)
         # We can cache the unique distances here, since they are constant.
         self.distance_vector = self.distances[self.triu_indices]
+    
+    @property
+    def max_n(self):
+        return self.edges.shape[0]-1
 
     def __call__(self, x):
         # Force integer indices, so this objective can be used with general optimization methods.
@@ -220,6 +224,15 @@ def find_bounds(f, n, iterations, frac):
     return (a, b)
 
 
+def optimize_lipo(objective):
+    res = adaptive_lipo(objective, [(0, objective.max_n)], 15, 0.1)
+    opt_index = np.argmax(res['y'])
+    opt_obj = res['y'][opt_index]
+    opt = int(res['x'][opt_index])
+
+    return {'x': opt, 'y': opt_obj}
+
+
 def stad(distances, unit=False, debug=False):
     if debug: print("Calculating MST")
     mst = unit_mst(distances)
@@ -230,26 +243,17 @@ def stad(distances, unit=False, debug=False):
 
     if debug: print("Optimizing")
     #a, b = find_bounds(objective, edges.shape[0], 10, 0.90)
-    a, b = 0, edges.shape[0]
-    res = adaptive_lipo(objective, [(a, b)], 15, 0.1)
+    opt = optimize_lipo(objective)
 
-    opt_index = np.argmax(res['y'])
-    opt_obj = res['y'][opt_index]
-    opt = int(res['x'][opt_index])
-
-    stad_adj = with_edges(mst, edges[:opt])
+    stad_adj = with_edges(mst, edges[:opt['x']])
     if not unit:
         stad_adj = np.multiply(stad_adj, distances)
 
     return {
         'adj': stad_adj,
-        'opt': {
-            'x': opt,
-            'obj': opt_obj},
+        'opt': opt,
         'obj': objective,
         'edges': edges,
-        'x': res['x'],
-        'y': res['y']
     }
 
 def run_stad(highD_dist_matrix, lens=[], features={}, debug=False):
