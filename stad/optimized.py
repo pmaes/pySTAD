@@ -25,7 +25,8 @@ import stad.diff_curve as diff_curve
 #    and requires little parameters.
 #
 #    Diff_curve is designed for this specific objective function (broadly
-#    concave, increasing) and has a bias towards a lower amount of edges.
+#    concave, increasing) and has a bias towards a local maximum at a lower
+#    amount of edges.
 
 
 # Linear algebra libraries like BLAS tend to be optimized for float32.
