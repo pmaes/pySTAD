@@ -82,7 +82,7 @@ def main(dataset, implementation, debug, viz, use_lens, algo):
     }
 
     t_start = time.time()
-    g = impl_module.run_stad(highD_dist_matrix, lens=lens, features=features, debug=debug, opts=opts),
+    g = impl_module.run_stad(highD_dist_matrix, lens=lens, features=features, debug=debug, opts=opts)
     t_done = time.time()
     t_delta = t_done - t_start
     print(f"STAD calculation took {t_delta:.2f}s for {highD_dist_matrix.shape[0]} datapoints")
