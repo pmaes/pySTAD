@@ -159,6 +159,8 @@ def cost_function(nr_of_links, args):
     graph = args['graph']
     list_of_links_to_add = args['list_of_links_to_add']
     highD_dist_matrix = args['highD_dist_matrix']
+    debug = args.get('debug', False)
+    if debug: print(nr_of_links)
 
     new_graph = add_links_to_graph(graph, highD_dist_matrix, list_of_links_to_add, nr_of_links)
     return 1 - correlation_between_distance_matrices(highD_dist_matrix, list(graph_to_distancematrix(new_graph)))
@@ -172,7 +174,8 @@ def run_basinhopping(cf, mst, links_to_add, highD_dist_matrix, debug = False):
     disp = False
     if debug: disp = True
     start = len(mst.es())
-    minimizer_kwargs = {'args':{'graph':mst,'list_of_links_to_add':links_to_add,'highD_dist_matrix':highD_dist_matrix}}
+    if debug: print(f"Starting optimization at {start}")
+    minimizer_kwargs = {'args':{'graph':mst,'list_of_links_to_add':links_to_add,'highD_dist_matrix':highD_dist_matrix,'debug':debug}}
     result = optimize.basinhopping(
         cf,
         start,
